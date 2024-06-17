@@ -1,84 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>hexo+next+typora+github踩坑之路</title>
-    <url>/2024/01/16/hexo+next+typora/</url>
-    <content><![CDATA[<h2 id="1-想要的结果"><a href="#1-想要的结果" class="headerlink" title="1.想要的结果"></a>1.想要的结果</h2><p>利用远程云服务器部署个人博客,实现对个人知识以及感悟的记录,在网络上有自己的小书屋.本地用typora编辑好md文件,然后上传到云服务器,利用hexo转换为静态网页,展示出来,最后还部署到了github页面.</p>
-<h2 id="2-准备工作"><a href="#2-准备工作" class="headerlink" title="2.准备工作"></a>2.准备工作</h2><h3 id="1-hexo环境准备"><a href="#1-hexo环境准备" class="headerlink" title="(1)hexo环境准备"></a>(1)hexo环境准备</h3><p>📢:非必须,主要是搞hexo的环境,你可以利用github页面来实现本地hexo,然后把本地的博客目录推到github上,利用github页面来实现公网访问.我是云服务器也可以访问,但是得我开启服务,也很方便测试,这样到时候直接推送到github页面也一样.</p>
-<p>云服务器需要安装npm node的环境,我的环境是这样,由于node和npm版本可能有差异,可能有一些node版本不支持某些版本npm</p>
-<p>📢:建议通过官网<a href="https://nodejs.org/en%E4%B8%8B%E8%BD%BD%E6%9C%80%E6%96%B0%E7%9A%84node%E7%89%88%E6%9C%AC,%E5%AE%89%E8%A3%85%E7%9A%84%E6%96%B9%E6%B3%95%E7%BD%91%E4%B8%8A%E4%B8%80%E5%A0%86,%E5%B0%B1%E4%B8%8D%E8%AF%A6%E8%A7%A3%E4%BA%86,https://www.runoob.com/nodejs/nodejs-install-setup.html,%E8%AF%95%E8%AF%95,%E6%88%91%E5%BF%98%E4%BA%86%E5%92%8B%E5%AE%89%E7%9A%84%E4%BA%86,%E5%8F%8D%E6%AD%A3%E7%A1%AE%E4%BF%9Dnode%E5%92%8Cnpm%E6%AD%A3%E5%B8%B8%E5%AE%89%E8%A3%85%E4%BA%86%E5%B0%B1%E5%A5%BD%E4%BA%86">https://nodejs.org/en下载最新的node版本,安装的方法网上一堆,就不详解了,https://www.runoob.com/nodejs/nodejs-install-setup.html,试试,我忘了咋安的了,反正确保node和npm正常安装了就好了</a></p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">node -v</span><br><span class="line">v16.20.2</span><br><span class="line">npm -v</span><br><span class="line">8.19.4</span><br></pre></td></tr></table></figure>
-
-<p>安装好npm后安装hexo</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">npm install hexo-cli -g</span><br><span class="line"></span><br><span class="line">[root@VM-8-12-centos ~]# hexo -v</span><br><span class="line">hexo-cli: 4.3.1</span><br><span class="line">os: linux 3.10.0-1160.105.1.el7.x86_64 CentOS Linux 7 (Core)</span><br><span class="line">node: 16.20.2</span><br><span class="line">v8: 9.4.146.26-node.26</span><br><span class="line">uv: 1.44.2</span><br><span class="line">zlib: 1.2.11</span><br><span class="line">brotli: 1.0.9</span><br><span class="line">ares: 1.19.1</span><br><span class="line">modules: 93</span><br><span class="line">nghttp2: 1.57.0</span><br><span class="line">napi: 8</span><br><span class="line">llhttp: 6.0.11</span><br><span class="line">openssl: 1.1.1k</span><br><span class="line">cldr: 41.0</span><br><span class="line">icu: 71.1</span><br><span class="line">tz: 2022f</span><br><span class="line">unicode: 14.0</span><br></pre></td></tr></table></figure>
-
-<h3 id="2-next主题下载"><a href="#2-next主题下载" class="headerlink" title="(2)next主题下载"></a>(2)next主题下载</h3><p>📢:主题自己可以选择,我是用的next,比较简约,之前看了anzhiyu的,比较花哨,我配置起来比较麻烦就没搞.</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">git clone https://github.com/next-theme/hexo-theme-next themes/next //比较慢,我好像是自己电脑挂了墙,下载下来上传到服务器的也可以(还学会了sftp进行文件传输,因为mac没有window的xshell,直接使用了自带的sftp上传,put命令上去就好了),git这个命令要在你的博客目录下进行</span><br></pre></td></tr></table></figure>
-
-<h3 id="3-免费typora下载"><a href="#3-免费typora下载" class="headerlink" title="(3)免费typora下载"></a>(3)免费typora下载</h3><p>直接找typora的历史版本,有免费的,我的版本是0.11.18 (5941),2021年11月的,最后的免费.<a href="https://typora.cn.uptodown.com/mac/versions">https://typora.cn.uptodown.com/mac/versions</a></p>
-<p>下载后安装,可以正常使用功能,之前没怎么遇到md文件的图片问题,md文件中的图片必须有存在的路径,可以是公网的超链接,也可以是本地的图片,为了方便就使用公网的超链接,但也相当于文把图片件放在了公网上,注意一些敏感信息的打码.</p>
-<h2 id="3-搭建博客并联动github"><a href="#3-搭建博客并联动github" class="headerlink" title="3.搭建博客并联动github"></a>3.搭建博客并联动github</h2><h3 id="1-服务器上创建博客目录"><a href="#1-服务器上创建博客目录" class="headerlink" title="(1)服务器上创建博客目录"></a>(1)服务器上创建博客目录</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">mkdir blog	//创建整个博客文件</span><br><span class="line">cd blog </span><br><span class="line">hexo init	//利用hexo进行初始化</span><br><span class="line">hexo cl //清楚hexo缓存</span><br><span class="line">hexo g //生成hexo的服务文件</span><br><span class="line">hexo s //启动hexo服务</span><br><span class="line">访问http://ip:4000,可以查看hexo服务搭建好了,然后就是进行配置,主题配置,到这里其实就已经把博客的框架搭起来了</span><br></pre></td></tr></table></figure>
-
-<h3 id="2-设置github页面访问"><a href="#2-设置github页面访问" class="headerlink" title="(2)设置github页面访问"></a>(2)设置github页面访问</h3><p>网上也有教程,先百度,google搜一下,两方面的配置,一个是github的设置,一个是云服务器git的配置</p>
-<p>云服务器:</p>
-<p>​	先生成服务器ssh秘钥,再设置git命令的邮箱和用户名,再npm安装hexo-git的推送工具</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ssh-keygen -t rsa -C &quot;your github eamil&quot; //一般在~/.ssh目录,找不到就find命令,根目录找一下&quot;*ssh&quot;</span><br><span class="line">git config --global user.email &quot;xxxx&quot;</span><br><span class="line">git config --global user.name &quot;xxxx&quot; //只要你的git是正常的就能设定好</span><br><span class="line">git config --get user.name</span><br><span class="line">git config --get user.email</span><br></pre></td></tr></table></figure>
-
-<p>github:</p>
-<p>​	添加云服务器的秘钥,实现不输入密码,你云服务器可以和github访问,github设置仓库,来作为你的博客文件存放的地方.</p>
-<p><img src="https://cdn.jsdelivr.net/gh/China-natian/China-natian.github.io@main/image/0117BoaoSz.png" alt="image-20240117094955573"></p>
-<p>将生成的ssh秘钥,那个生成的.pub文件内容粘贴到github中,就可以了.</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ssh -T git@github.com	//测试是否配置成功,服务器经常抽风,访问github很慢,后续会研究研究服务器挂到自己机场比较简单的方式,网上也有一些安装软件的方法,但作为完美主义者,还是想尽可能简单.</span><br><span class="line">Hi &lt;GitHub用户名&gt;! You&#x27;ve successfully authenticated, but GitHub does not provide shell access.	//如果正常配置,访问github正常,那么就会返回这个</span><br></pre></td></tr></table></figure>
-
-<p>然后npm下载github-hexo的一键推送</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">npm install hexo-deployer-git --save</span><br><span class="line">设置blog目录下的_config.yml,这个文件是hexo的配置文件</span><br><span class="line">deploy:</span><br><span class="line">  type: git</span><br><span class="line">  repository: git@github.com:China-natian/China-natian.github.io.git</span><br><span class="line">  branch: main</span><br><span class="line">vim打开配置文件后添加修改即可.</span><br><span class="line">hexo cl&amp;&amp;hexo g	//刷新一下</span><br><span class="line">hexo -d	//查看github对应仓库即可发现有很多文件上传了.</span><br><span class="line">访问你的https://xxxxx.github.io,查看网页,整个过程其实很多波折,但最后有点莫名其妙,后面章节体现</span><br></pre></td></tr></table></figure>
-
-<h2 id="4-个性配置"><a href="#4-个性配置" class="headerlink" title="4.个性配置"></a>4.个性配置</h2><p>以上的教程其实已经部署好了你的基础的博客了,使用默认的主题,就可以发布文章了,但是我觉得自己的博客太素了,就花时间多折腾了一下,换个主题,添加一些设置,并且更好的搞成一个便捷的流程,就想着以后直接自己电脑写好md文件,然后上传到服务器,执行hexo的命令就可以归档自己的笔记.</p>
-<h3 id="1-主题设置"><a href="#1-主题设置" class="headerlink" title="(1)主题设置"></a>(1)主题设置</h3><p>找的是next主题,比较简约,但是比原本的好很多,找了优化的教程,<a href="https://zhuanlan.zhihu.com/p/618864711,%E4%B8%BB%E8%A6%81%E7%9C%8B%E7%9A%84%E6%98%AF%E4%BC%98%E5%8C%96%E9%83%A8%E5%88%86,%E6%88%91%E8%87%AA%E5%B7%B1%E6%B2%A1%E5%85%A8%E9%83%A8%E9%83%BD%E8%AE%BE%E7%BD%AE,%E5%8F%AA%E8%AE%BE%E7%BD%AE%E4%BA%86%E4%B8%80%E9%83%A8%E5%88%86,%E7%94%A8%E6%9D%A5%E4%BA%86%E8%A7%A3%E6%80%8E%E4%B9%88%E6%9B%B4%E5%A5%BD%E7%9A%84%E8%AE%BE%E7%BD%AEhexo%E4%B8%BB%E9%A2%98">https://zhuanlan.zhihu.com/p/618864711,主要看的是优化部分,我自己没全部都设置,只设置了一部分,用来了解怎么更好的设置hexo主题</a>.</p>
-<p>设置了菜单,添加了搜索功能,美化了字数统计,添加了个人的联系链接等</p>
-<h3 id="2-typora图片上传"><a href="#2-typora图片上传" class="headerlink" title="(2)typora图片上传"></a>(2)typora图片上传</h3><p>用过typora的都知道,md文档图片的应用不是直接写到文档里面,而是引用外部文件,不管是引用目录还是超链接都可以,所以就出现一个问题,你本地编辑好了md文件,但是你会发现你把md文件转移到另一台电脑或者云服务器的时候,图片就无法正常加载,解决方法:</p>
-<p>​	①你可以把你的图片自定义存储到一个文件夹,你复制粘贴图片的时候通过设置把他弄到同一级目录的文件,比如我的环境,我设置了上传到当前目录的.images目录下,前面的 . 是为了作为隐藏文件,这样不显示隐藏文件时不会那么杂乱.</p>
-<p><img src="https://cdn.jsdelivr.net/gh/China-natian/China-natian.github.io@main/image/0117GBdHyU.png" alt="image-20240117105108012"></p>
-<p>如果你只是转移md文件的话这样就OK了</p>
-<p><img src="https://cdn.jsdelivr.net/gh/China-natian/China-natian.github.io@main/image/01175KNMJK.png" alt="image-20240117105030716"></p>
-<p>但我想着一劳永逸,不想每次转移md文件还要去转移图片,就想着直接引用超链接,用的就是typora+upic+github的配置,这样解决了我的需求,我mac下载了upic,安装好后做好配置,配置好访达扩展</p>
-<p><img src="https://cdn.jsdelivr.net/gh/China-natian/China-natian.github.io@main/image/0117RNLcKK.png" alt="image-20240117105811074"></p>
-<p>可以看到需要token,根据upic的教程,github新建就好了,token建议是设置自定义,时间久一点,不然就会过期,懒得换</p>
-<p><img src="https://cdn.jsdelivr.net/gh/China-natian/China-natian.github.io@main/image/0117Xh4FbN.png" alt="image-20240117105957287"></p>
-<p>生成后记得复制token,只显示一次,当然可以删除重新生成,没有任何影响.</p>
-<h3 id="3-编写md文档的模板"><a href="#3-编写md文档的模板" class="headerlink" title="(3)编写md文档的模板"></a>(3)编写md文档的模板</h3><p>md插入yaml,编写关键词,这样hexo+next会更好的识别,</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">---</span><br><span class="line">Title: hexo+next+typora+github踩坑之路</span><br><span class="line">Date: 2024-01-16</span><br><span class="line">Descripution: 利用hexo,next,typora,github搭建个人博客的踩坑之路(云服务器+本地mac)</span><br><span class="line">Author: yoki</span><br><span class="line">---</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://cdn.jsdelivr.net/gh/China-natian/China-natian.github.io@main/image/0116F1dqmd.png" alt="image-20240116151704259"></p>
-<p>到此就可以正常编写</p>
-<p><img src="https://cdn.jsdelivr.net/gh/China-natian/China-natian.github.io@main/image/0117vQNIVF.png" alt="image-20240117111805766"></p>
-<p>这样就可以完整实现需求了</p>
-<h2 id="5-坑旅"><a href="#5-坑旅" class="headerlink" title="5.坑旅"></a>5.坑旅</h2><h3 id="1-部署github页面"><a href="#1-部署github页面" class="headerlink" title="(1)部署github页面"></a>(1)部署github页面</h3><p>这个很莫名奇妙,我按着网上教程走,但是出现过很多问题.</p>
-<p>​	第一:网络问题,有的教程跟着走会发现很多时候云服务器无法访问github,导致很多时候无法通过验证,这个解决的话挂代理吧,能想到的就这个,或许可以继续深入找找有没有更好的解决办法.</p>
-<p>​	第二:使用github那个一键推送,也就是hexo d命令的话,记得设置好github秘钥,确保git命令设置了邮箱和用户名,hexo配置文件_config.yml的推送正确.</p>
-<h3 id="2-typora上传文件"><a href="#2-typora上传文件" class="headerlink" title="(2)typora上传文件"></a>(2)typora上传文件</h3><p>网上大多教程都是搞得云服务的图床,用云服务器的存储桶,比如腾讯云的cos啥的,利用pic来上传,但是存储桶要钱,所以我白嫖党玩不了,我就直接把我的图片上传到github,直接应用访问就行了.</p>
-<p>这中间装过picgo,用过命令行的方式,picogo没有存储桶弄不了,命令行可以自定义命令上传,网上找了一个picgo命令的教程,但是由于mac权限问题,不行,还有就是如果你是用brew安装的upic也有可能由于权限问题无法成功执行命令.还是直接在github下载,移动到应用程序文件夹.</p>
-]]></content>
-      <tags>
-        <tag>blog</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>云服务器基本配置</title>
-    <url>/2024/01/03/%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%9F%BA%E7%A1%80%E9%85%8D%E7%BD%AE/</url>
-    <content><![CDATA[<h2 id="1-配置图形化界面"><a href="#1-配置图形化界面" class="headerlink" title="1.配置图形化界面"></a>1.配置图形化界面</h2><p>安装图形化界面</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">yum groupinstall &quot;GNOME Desktop&quot; &quot;Graphical Administration Tools&quot;</span><br><span class="line">systemctl get-default获取当前方式，systemctl set-default设置启动方式</span><br><span class="line">multi-user.target是命令行方式，graphical.target是图形方式</span><br><span class="line">yum install xrdp #开放3389</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>卸载图形化界面</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">yum groupremove GNOME Desktop</span><br><span class="line">yum autoremove</span><br></pre></td></tr></table></figure>
-
-<h2 id="2-配置md文件"><a href="#2-配置md文件" class="headerlink" title="2.配置md文件"></a>2.配置md文件</h2><p><img src="https://cdn.jsdelivr.net/gh/China-natian/China-natian.github.io@main/image/0116F1dqmd.png" alt="image-20240116151704259"></p>
-]]></content>
-      <tags>
-        <tag>test</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>PHP代码审计</title>
     <url>/2023/10/15/PHP%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/</url>
     <content><![CDATA[<h1 id="PHP代码审计"><a href="#PHP代码审计" class="headerlink" title="PHP代码审计"></a>PHP代码审计</h1><h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h2><p>原项目地址<a href="https://github.com/hongriSec/PHP-Audit-Labs/">hongriSec&#x2F;PHP-Audit-Labs: 一个关于PHP的代码审计项目 (github.com)</a>。此项目有两个问题，一是day1的docker镜像拉取的时候路径有问题，Dockerfile中</p>
@@ -262,6 +184,90 @@
 <h2 id="Day6"><a href="#Day6" class="headerlink" title="Day6-"></a>Day6-</h2>]]></content>
       <tags>
         <tag>PHP,代码审计</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>hexo+next+typora+github踩坑之路</title>
+    <url>/2024/01/16/hexo+next+typora/</url>
+    <content><![CDATA[<h2 id="1-想要的结果"><a href="#1-想要的结果" class="headerlink" title="1.想要的结果"></a>1.想要的结果</h2><p>利用远程云服务器部署个人博客,实现对个人知识以及感悟的记录,在网络上有自己的小书屋.本地用typora编辑好md文件,然后上传到云服务器,利用hexo转换为静态网页,展示出来,最后还部署到了github页面.</p>
+<h2 id="2-准备工作"><a href="#2-准备工作" class="headerlink" title="2.准备工作"></a>2.准备工作</h2><h3 id="1-hexo环境准备"><a href="#1-hexo环境准备" class="headerlink" title="(1)hexo环境准备"></a>(1)hexo环境准备</h3><p>📢:非必须,主要是搞hexo的环境,你可以利用github页面来实现本地hexo,然后把本地的博客目录推到github上,利用github页面来实现公网访问.我是云服务器也可以访问,但是得我开启服务,也很方便测试,这样到时候直接推送到github页面也一样.</p>
+<p>云服务器需要安装npm node的环境,我的环境是这样,由于node和npm版本可能有差异,可能有一些node版本不支持某些版本npm</p>
+<p>📢:建议通过官网<a href="https://nodejs.org/en%E4%B8%8B%E8%BD%BD%E6%9C%80%E6%96%B0%E7%9A%84node%E7%89%88%E6%9C%AC,%E5%AE%89%E8%A3%85%E7%9A%84%E6%96%B9%E6%B3%95%E7%BD%91%E4%B8%8A%E4%B8%80%E5%A0%86,%E5%B0%B1%E4%B8%8D%E8%AF%A6%E8%A7%A3%E4%BA%86,https://www.runoob.com/nodejs/nodejs-install-setup.html,%E8%AF%95%E8%AF%95,%E6%88%91%E5%BF%98%E4%BA%86%E5%92%8B%E5%AE%89%E7%9A%84%E4%BA%86,%E5%8F%8D%E6%AD%A3%E7%A1%AE%E4%BF%9Dnode%E5%92%8Cnpm%E6%AD%A3%E5%B8%B8%E5%AE%89%E8%A3%85%E4%BA%86%E5%B0%B1%E5%A5%BD%E4%BA%86">https://nodejs.org/en下载最新的node版本,安装的方法网上一堆,就不详解了,https://www.runoob.com/nodejs/nodejs-install-setup.html,试试,我忘了咋安的了,反正确保node和npm正常安装了就好了</a></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">node -v</span><br><span class="line">v16.20.2</span><br><span class="line">npm -v</span><br><span class="line">8.19.4</span><br></pre></td></tr></table></figure>
+
+<p>安装好npm后安装hexo</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">npm install hexo-cli -g</span><br><span class="line"></span><br><span class="line">[root@VM-8-12-centos ~]# hexo -v</span><br><span class="line">hexo-cli: 4.3.1</span><br><span class="line">os: linux 3.10.0-1160.105.1.el7.x86_64 CentOS Linux 7 (Core)</span><br><span class="line">node: 16.20.2</span><br><span class="line">v8: 9.4.146.26-node.26</span><br><span class="line">uv: 1.44.2</span><br><span class="line">zlib: 1.2.11</span><br><span class="line">brotli: 1.0.9</span><br><span class="line">ares: 1.19.1</span><br><span class="line">modules: 93</span><br><span class="line">nghttp2: 1.57.0</span><br><span class="line">napi: 8</span><br><span class="line">llhttp: 6.0.11</span><br><span class="line">openssl: 1.1.1k</span><br><span class="line">cldr: 41.0</span><br><span class="line">icu: 71.1</span><br><span class="line">tz: 2022f</span><br><span class="line">unicode: 14.0</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-next主题下载"><a href="#2-next主题下载" class="headerlink" title="(2)next主题下载"></a>(2)next主题下载</h3><p>📢:主题自己可以选择,我是用的next,比较简约,之前看了anzhiyu的,比较花哨,我配置起来比较麻烦就没搞.</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">git clone https://github.com/next-theme/hexo-theme-next themes/next //比较慢,我好像是自己电脑挂了墙,下载下来上传到服务器的也可以(还学会了sftp进行文件传输,因为mac没有window的xshell,直接使用了自带的sftp上传,put命令上去就好了),git这个命令要在你的博客目录下进行</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-免费typora下载"><a href="#3-免费typora下载" class="headerlink" title="(3)免费typora下载"></a>(3)免费typora下载</h3><p>直接找typora的历史版本,有免费的,我的版本是0.11.18 (5941),2021年11月的,最后的免费.<a href="https://typora.cn.uptodown.com/mac/versions">https://typora.cn.uptodown.com/mac/versions</a></p>
+<p>下载后安装,可以正常使用功能,之前没怎么遇到md文件的图片问题,md文件中的图片必须有存在的路径,可以是公网的超链接,也可以是本地的图片,为了方便就使用公网的超链接,但也相当于文把图片件放在了公网上,注意一些敏感信息的打码.</p>
+<h2 id="3-搭建博客并联动github"><a href="#3-搭建博客并联动github" class="headerlink" title="3.搭建博客并联动github"></a>3.搭建博客并联动github</h2><h3 id="1-服务器上创建博客目录"><a href="#1-服务器上创建博客目录" class="headerlink" title="(1)服务器上创建博客目录"></a>(1)服务器上创建博客目录</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">mkdir blog	//创建整个博客文件</span><br><span class="line">cd blog </span><br><span class="line">hexo init	//利用hexo进行初始化</span><br><span class="line">hexo cl //清楚hexo缓存</span><br><span class="line">hexo g //生成hexo的服务文件</span><br><span class="line">hexo s //启动hexo服务</span><br><span class="line">访问http://ip:4000,可以查看hexo服务搭建好了,然后就是进行配置,主题配置,到这里其实就已经把博客的框架搭起来了</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-设置github页面访问"><a href="#2-设置github页面访问" class="headerlink" title="(2)设置github页面访问"></a>(2)设置github页面访问</h3><p>网上也有教程,先百度,google搜一下,两方面的配置,一个是github的设置,一个是云服务器git的配置</p>
+<p>云服务器:</p>
+<p>​	先生成服务器ssh秘钥,再设置git命令的邮箱和用户名,再npm安装hexo-git的推送工具</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ssh-keygen -t rsa -C &quot;your github eamil&quot; //一般在~/.ssh目录,找不到就find命令,根目录找一下&quot;*ssh&quot;</span><br><span class="line">git config --global user.email &quot;xxxx&quot;</span><br><span class="line">git config --global user.name &quot;xxxx&quot; //只要你的git是正常的就能设定好</span><br><span class="line">git config --get user.name</span><br><span class="line">git config --get user.email</span><br></pre></td></tr></table></figure>
+
+<p>github:</p>
+<p>​	添加云服务器的秘钥,实现不输入密码,你云服务器可以和github访问,github设置仓库,来作为你的博客文件存放的地方.</p>
+<p><img src="https://cdn.jsdelivr.net/gh/China-natian/China-natian.github.io@main/image/0117BoaoSz.png" alt="image-20240117094955573"></p>
+<p>将生成的ssh秘钥,那个生成的.pub文件内容粘贴到github中,就可以了.</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ssh -T git@github.com	//测试是否配置成功,服务器经常抽风,访问github很慢,后续会研究研究服务器挂到自己机场比较简单的方式,网上也有一些安装软件的方法,但作为完美主义者,还是想尽可能简单.</span><br><span class="line">Hi &lt;GitHub用户名&gt;! You&#x27;ve successfully authenticated, but GitHub does not provide shell access.	//如果正常配置,访问github正常,那么就会返回这个</span><br></pre></td></tr></table></figure>
+
+<p>然后npm下载github-hexo的一键推送</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">npm install hexo-deployer-git --save</span><br><span class="line">设置blog目录下的_config.yml,这个文件是hexo的配置文件</span><br><span class="line">deploy:</span><br><span class="line">  type: git</span><br><span class="line">  repository: git@github.com:China-natian/China-natian.github.io.git</span><br><span class="line">  branch: main</span><br><span class="line">vim打开配置文件后添加修改即可.</span><br><span class="line">hexo cl&amp;&amp;hexo g	//刷新一下</span><br><span class="line">hexo -d	//查看github对应仓库即可发现有很多文件上传了.</span><br><span class="line">访问你的https://xxxxx.github.io,查看网页,整个过程其实很多波折,但最后有点莫名其妙,后面章节体现</span><br></pre></td></tr></table></figure>
+
+<h2 id="4-个性配置"><a href="#4-个性配置" class="headerlink" title="4.个性配置"></a>4.个性配置</h2><p>以上的教程其实已经部署好了你的基础的博客了,使用默认的主题,就可以发布文章了,但是我觉得自己的博客太素了,就花时间多折腾了一下,换个主题,添加一些设置,并且更好的搞成一个便捷的流程,就想着以后直接自己电脑写好md文件,然后上传到服务器,执行hexo的命令就可以归档自己的笔记.</p>
+<h3 id="1-主题设置"><a href="#1-主题设置" class="headerlink" title="(1)主题设置"></a>(1)主题设置</h3><p>找的是next主题,比较简约,但是比原本的好很多,找了优化的教程,<a href="https://zhuanlan.zhihu.com/p/618864711,%E4%B8%BB%E8%A6%81%E7%9C%8B%E7%9A%84%E6%98%AF%E4%BC%98%E5%8C%96%E9%83%A8%E5%88%86,%E6%88%91%E8%87%AA%E5%B7%B1%E6%B2%A1%E5%85%A8%E9%83%A8%E9%83%BD%E8%AE%BE%E7%BD%AE,%E5%8F%AA%E8%AE%BE%E7%BD%AE%E4%BA%86%E4%B8%80%E9%83%A8%E5%88%86,%E7%94%A8%E6%9D%A5%E4%BA%86%E8%A7%A3%E6%80%8E%E4%B9%88%E6%9B%B4%E5%A5%BD%E7%9A%84%E8%AE%BE%E7%BD%AEhexo%E4%B8%BB%E9%A2%98">https://zhuanlan.zhihu.com/p/618864711,主要看的是优化部分,我自己没全部都设置,只设置了一部分,用来了解怎么更好的设置hexo主题</a>.</p>
+<p>设置了菜单,添加了搜索功能,美化了字数统计,添加了个人的联系链接等</p>
+<h3 id="2-typora图片上传"><a href="#2-typora图片上传" class="headerlink" title="(2)typora图片上传"></a>(2)typora图片上传</h3><p>用过typora的都知道,md文档图片的应用不是直接写到文档里面,而是引用外部文件,不管是引用目录还是超链接都可以,所以就出现一个问题,你本地编辑好了md文件,但是你会发现你把md文件转移到另一台电脑或者云服务器的时候,图片就无法正常加载,解决方法:</p>
+<p>​	①你可以把你的图片自定义存储到一个文件夹,你复制粘贴图片的时候通过设置把他弄到同一级目录的文件,比如我的环境,我设置了上传到当前目录的.images目录下,前面的 . 是为了作为隐藏文件,这样不显示隐藏文件时不会那么杂乱.</p>
+<p><img src="https://cdn.jsdelivr.net/gh/China-natian/China-natian.github.io@main/image/0117GBdHyU.png" alt="image-20240117105108012"></p>
+<p>如果你只是转移md文件的话这样就OK了</p>
+<p><img src="https://cdn.jsdelivr.net/gh/China-natian/China-natian.github.io@main/image/01175KNMJK.png" alt="image-20240117105030716"></p>
+<p>但我想着一劳永逸,不想每次转移md文件还要去转移图片,就想着直接引用超链接,用的就是typora+upic+github的配置,这样解决了我的需求,我mac下载了upic,安装好后做好配置,配置好访达扩展</p>
+<p><img src="https://cdn.jsdelivr.net/gh/China-natian/China-natian.github.io@main/image/0117RNLcKK.png" alt="image-20240117105811074"></p>
+<p>可以看到需要token,根据upic的教程,github新建就好了,token建议是设置自定义,时间久一点,不然就会过期,懒得换</p>
+<p><img src="https://cdn.jsdelivr.net/gh/China-natian/China-natian.github.io@main/image/0117Xh4FbN.png" alt="image-20240117105957287"></p>
+<p>生成后记得复制token,只显示一次,当然可以删除重新生成,没有任何影响.</p>
+<h3 id="3-编写md文档的模板"><a href="#3-编写md文档的模板" class="headerlink" title="(3)编写md文档的模板"></a>(3)编写md文档的模板</h3><p>md插入yaml,编写关键词,这样hexo+next会更好的识别,</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">---</span><br><span class="line">Title: hexo+next+typora+github踩坑之路</span><br><span class="line">Date: 2024-01-16</span><br><span class="line">Descripution: 利用hexo,next,typora,github搭建个人博客的踩坑之路(云服务器+本地mac)</span><br><span class="line">Author: yoki</span><br><span class="line">---</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/China-natian/China-natian.github.io@main/image/0116F1dqmd.png" alt="image-20240116151704259"></p>
+<p>到此就可以正常编写</p>
+<p><img src="https://cdn.jsdelivr.net/gh/China-natian/China-natian.github.io@main/image/0117vQNIVF.png" alt="image-20240117111805766"></p>
+<p>这样就可以完整实现需求了</p>
+<h2 id="5-坑旅"><a href="#5-坑旅" class="headerlink" title="5.坑旅"></a>5.坑旅</h2><h3 id="1-部署github页面"><a href="#1-部署github页面" class="headerlink" title="(1)部署github页面"></a>(1)部署github页面</h3><p>这个很莫名奇妙,我按着网上教程走,但是出现过很多问题.</p>
+<p>​	第一:网络问题,有的教程跟着走会发现很多时候云服务器无法访问github,导致很多时候无法通过验证,这个解决的话挂代理吧,能想到的就这个,或许可以继续深入找找有没有更好的解决办法.</p>
+<p>​	第二:使用github那个一键推送,也就是hexo d命令的话,记得设置好github秘钥,确保git命令设置了邮箱和用户名,hexo配置文件_config.yml的推送正确.</p>
+<h3 id="2-typora上传文件"><a href="#2-typora上传文件" class="headerlink" title="(2)typora上传文件"></a>(2)typora上传文件</h3><p>网上大多教程都是搞得云服务的图床,用云服务器的存储桶,比如腾讯云的cos啥的,利用pic来上传,但是存储桶要钱,所以我白嫖党玩不了,我就直接把我的图片上传到github,直接应用访问就行了.</p>
+<p>这中间装过picgo,用过命令行的方式,picogo没有存储桶弄不了,命令行可以自定义命令上传,网上找了一个picgo命令的教程,但是由于mac权限问题,不行,还有就是如果你是用brew安装的upic也有可能由于权限问题无法成功执行命令.还是直接在github下载,移动到应用程序文件夹.</p>
+]]></content>
+      <tags>
+        <tag>blog</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>恋爱史</title>
+    <url>/2024/01/16/%E2%9D%A4/</url>
+    <content><![CDATA[<h2 id="2023"><a href="#2023" class="headerlink" title="2023"></a>2023</h2><p>那是一个风和日丽的下午,我们被邀请参加一场情感剧情的综艺,她一眼就看上了我,我一下子就看上了她,她太漂亮了,性格又好,因为我来在里面是情侣,戏中生情,一直到老.</p>
+]]></content>
+  </entry>
+  <entry>
+    <title>云服务器基本配置</title>
+    <url>/2024/01/03/%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%9F%BA%E7%A1%80%E9%85%8D%E7%BD%AE/</url>
+    <content><![CDATA[<h2 id="1-配置图形化界面"><a href="#1-配置图形化界面" class="headerlink" title="1.配置图形化界面"></a>1.配置图形化界面</h2><p>安装图形化界面</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">yum groupinstall &quot;GNOME Desktop&quot; &quot;Graphical Administration Tools&quot;</span><br><span class="line">systemctl get-default获取当前方式，systemctl set-default设置启动方式</span><br><span class="line">multi-user.target是命令行方式，graphical.target是图形方式</span><br><span class="line">yum install xrdp #开放3389</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>卸载图形化界面</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">yum groupremove GNOME Desktop</span><br><span class="line">yum autoremove</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-配置md文件"><a href="#2-配置md文件" class="headerlink" title="2.配置md文件"></a>2.配置md文件</h2><p><img src="https://cdn.jsdelivr.net/gh/China-natian/China-natian.github.io@main/image/0116F1dqmd.png" alt="image-20240116151704259"></p>
+]]></content>
+      <tags>
+        <tag>test</tag>
       </tags>
   </entry>
 </search>
